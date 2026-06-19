@@ -1,15 +1,35 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: monitoring
+  name: vmstack
   namespace: monitoring
+
 spec:
   interval: 10m
 
   chart:
     spec:
-      chart: kube-prometheus-stack
+      chart: victoria-metrics-k8s-stack
+
       sourceRef:
         kind: HelmRepository
-        name: prometheus-community
+        name: vm
         namespace: flux-system
+
+  values:
+    defaultDashboardsEnabled: true
+
+    grafana:
+      enabled: true
+
+    victoria-metrics-operator:
+      enabled: true
+
+    prometheus-node-exporter:
+      enabled: true
+
+    kube-state-metrics:
+      enabled: true
+
+    alertmanager:
+      enabled: false
