@@ -10,7 +10,6 @@ spec:
   chart:
     spec:
       chart: victoria-metrics-k8s-stack
-
       sourceRef:
         kind: HelmRepository
         name: vm
@@ -25,9 +24,13 @@ spec:
 
     grafana:
       enabled: true
+      service:
+        type: NodePort
+        nodePort: 30300
 
     kube-state-metrics:
       enabled: true
+      replicaCount: 1
 
     prometheus-node-exporter:
       enabled: true
