@@ -17,17 +17,17 @@ spec:
         namespace: flux-system
 
   values:
-  vmalert:
-    enabled: false
+    vmalert:
+      enabled: false
 
-  alertmanager:
-    enabled: false
+    alertmanager:
+      enabled: false
 
-  grafana:
-    enabled: true
+    grafana:
+      enabled: true
 
-  kube-state-metrics:
-    enabled: true
+    kube-state-metrics:
+      enabled: true
 
-  prometheus-node-exporter:
-    enabled: true
+    prometheus-node-exporter:
+      enabled: true
