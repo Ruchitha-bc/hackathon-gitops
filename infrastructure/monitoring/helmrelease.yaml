@@ -17,19 +17,17 @@ spec:
         namespace: flux-system
 
   values:
-    defaultDashboardsEnabled: true
+  vmalert:
+    enabled: false
 
-    grafana:
-      enabled: true
+  alertmanager:
+    enabled: false
 
-    victoria-metrics-operator:
-      enabled: true
+  grafana:
+    enabled: true
 
-    prometheus-node-exporter:
-      enabled: true
+  kube-state-metrics:
+    enabled: true
 
-    kube-state-metrics:
-      enabled: true
-
-    alertmanager:
-      enabled: false
+  prometheus-node-exporter:
+    enabled: true
