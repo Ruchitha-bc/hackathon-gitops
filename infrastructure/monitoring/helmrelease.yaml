@@ -24,6 +24,7 @@ spec:
 
     grafana:
       enabled: true
+      replicaCount: 1
       adminUser: admin
       adminPassword: MySecurePassword123
       persistence:
