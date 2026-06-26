@@ -3,8 +3,10 @@ kind: HelmRelease
 metadata:
   name: vmstack
   namespace: monitoring
+
 spec:
   interval: 10m
+
   chart:
     spec:
       chart: victoria-metrics-k8s-stack
@@ -44,9 +46,52 @@ spec:
         runAsUser: 472
         runAsGroup: 472
 
+      resources:
+        requests:
+          cpu: 50m
+          memory: 100Mi
+        limits:
+          cpu: 100m
+          memory: 150Mi
+
+    vmsingle:
+      enabled: true
+      spec:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+
     kube-state-metrics:
       enabled: true
       replicaCount: 1
+      resources:
+        requests:
+          cpu: 25m
+          memory: 50Mi
+        limits:
+          cpu: 100m
+          memory: 100Mi
 
     prometheus-node-exporter:
       enabled: true
+      resources:
+        requests:
+          cpu: 25m
+          memory: 30Mi
+        limits:
+          cpu: 50m
+          memory: 64Mi
+
+    vmagent:
+      spec:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
