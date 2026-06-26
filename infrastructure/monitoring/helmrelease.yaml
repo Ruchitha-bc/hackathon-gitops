@@ -3,10 +3,8 @@ kind: HelmRelease
 metadata:
   name: vmstack
   namespace: monitoring
-
 spec:
   interval: 10m
-
   chart:
     spec:
       chart: victoria-metrics-k8s-stack
@@ -27,12 +25,24 @@ spec:
       replicaCount: 1
       adminUser: admin
       adminPassword: MySecurePassword123
+
       persistence:
         enabled: true
         size: 5Gi
+
       service:
         type: NodePort
         nodePort: 30300
+
+      initChownData:
+        enabled: false
+
+      podSecurityContext:
+        fsGroup: 472
+
+      securityContext:
+        runAsUser: 472
+        runAsGroup: 472
 
     kube-state-metrics:
       enabled: true
