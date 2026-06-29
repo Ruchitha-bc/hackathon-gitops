@@ -3,25 +3,40 @@ kind: Deployment
 metadata:
   name: nginx
   namespace: default
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: nginx
+
   template:
     metadata:
       labels:
         app: nginx
+
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - name: html-volume
-          mountPath: /usr/share/nginx/html
+        - name: nginx
+          image: nginx:latest
+
+          ports:
+            - containerPort: 80
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+
+          volumeMounts:
+            - name: html-volume
+              mountPath: /usr/share/nginx/html
+
       volumes:
-      - name: html-volume
-        configMap:
-          name: nginx-html  # Kustomize will automatically append the hash suffix here
+        - name: html-volume
+          configMap:
+            name: nginx-html
