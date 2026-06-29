@@ -6,9 +6,6 @@ configMapGenerator:
     files:
       - index.html
 
-generatorOptions:
-  disableNameSuffixHash: true
-
 resources:
   - deployment.yaml
   - service.yaml
