@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
   - monitoring
-  - jenkins
   - ingress-nginx
+  - jenkins
+  - keda
