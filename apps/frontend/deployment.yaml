@@ -1,1 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-html
+  namespace: default
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Automated Complaint Management System</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; padding: 50px; background-color: #f4f4f9;">
+        <div style="max-width: 450px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <h2>Submit a Complaint</h2>
+            <form id="complaintForm">
+                <input type="text" id="title" placeholder="Complaint Title" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;"><br>
+                <textarea id="desc" placeholder="Describe your issue here..." required style="width: 100%; padding: 10px; margin-bottom: 15px; height: 100px; border: 1px solid #ccc; border-radius: 4px;"></textarea><br>
+                <button type="submit" style="width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Submit Complaint</button>
+            </form>
+            <div id="msg" style="margin-top: 15px; font-weight: bold; color: #007bff;"></div>
+        </div>
 
+        <script>
+            document.getElementById('complaintForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const payload = {
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('desc').value
+                };
+                try {
+                    const response = await fetch('/api/complaints', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await response.json();
+                    document.getElementById('msg').innerText = "Complaint Logged! Ticket ID: " + data.id;
+                    document.getElementById('complaintForm').reset();
+                } catch (err) {
+                    document.getElementById('msg').innerText = "Routing error connecting to Backend API.";
+                }
+            });
+        </script>
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: frontend-html
