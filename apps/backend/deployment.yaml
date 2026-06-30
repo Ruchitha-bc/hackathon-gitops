@@ -61,7 +61,7 @@ spec:
         - containerPort: 5000
         env:
         - name: DB_HOST
-          value: "REPLACE_THIS_WITH_YOUR_RDS_ENDPOINT_STRING_WITHOUT_PORT"
+          value: "terraform-20260630103801040900000003.c1ou86wc0d3s.ap-south-1.rds.amazonaws.com"
         - name: DB_NAME
           value: "complaints_db"
         - name: DB_USER
