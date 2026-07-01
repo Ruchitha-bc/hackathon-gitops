@@ -54,5 +54,27 @@ pipeline {
             }
         }
 
+        stage('Commit and Push GitOps Changes') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'github',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_TOKEN'
+                )]) {
+                    sh '''
+                    git config user.name "Jenkins"
+                    git config user.email "jenkins@example.com"
+
+                    git add apps/frontend/deployment.yaml
+                    git add apps/backend/deployment.yaml
+
+                    git diff --cached --quiet || git commit -m "Update image tags to build ${BUILD_NUMBER}"
+
+                    git push https://${GIT_USER}:${GIT_TOKEN}@github.com/Ruchitha-bc/hackathon-gitops.git HEAD:main
+                    '''
+                }
+            }
+        }
+
     }
 }
