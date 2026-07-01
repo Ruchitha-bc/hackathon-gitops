@@ -7,6 +7,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -43,5 +44,15 @@ pipeline {
                 sh 'docker push $BACKEND_IMAGE:${BUILD_NUMBER}'
             }
         }
+
+        stage('Update Deployment YAML') {
+            steps {
+                sh '''
+                sed -i "s|image: .*frontend:.*|image: ${FRONTEND_IMAGE}:${BUILD_NUMBER}|g" apps/frontend/deployment.yaml
+                sed -i "s|image: .*backend:.*|image: ${BACKEND_IMAGE}:${BUILD_NUMBER}|g" apps/backend/deployment.yaml
+                '''
+            }
+        }
+
     }
 }
