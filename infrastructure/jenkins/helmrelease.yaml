@@ -20,7 +20,7 @@ spec:
     controller:
       image:
         registry: docker.io
-        repository: YOUR_DOCKERHUB_USERNAME/jenkins
+        repository: diyacmenezes202/jenkins
         tag: latest
 
       serviceType: NodePort
