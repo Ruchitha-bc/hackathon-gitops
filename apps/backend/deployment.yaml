@@ -1,6 +1,5 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: backend
   namespace: default
@@ -13,34 +12,33 @@ spec:
       app: backend
 
   template:
-
     metadata:
       labels:
         app: backend
 
     spec:
-
       containers:
-
       - name: backend
-
-        image: diyacmenezes202/backend:33
-
+        image: diyacmenezes202/backend:32
         imagePullPolicy: Always
 
         ports:
         - containerPort: 5000
 
         env:
-
         - name: DB_HOST
           value: "terraform-20260701105902800000000003.c1ou86wc0d3s.ap-south-1.rds.amazonaws.com"
-
         - name: DB_NAME
           value: "complaints_db"
-
         - name: DB_USER
           value: "postgres"
-
         - name: DB_PASSWORD
           value: "securepassword123"
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
