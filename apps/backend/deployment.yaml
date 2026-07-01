@@ -24,7 +24,7 @@ spec:
 
       - name: backend
 
-        image: diyacmenezes202/backend:21
+        image: diyacmenezes202/backend:22
 
         imagePullPolicy: Always
 
