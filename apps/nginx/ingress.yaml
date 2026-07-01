@@ -1,28 +1,31 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
+
 metadata:
   name: nginx-ingress
   namespace: default
+
   annotations:
-    # Enables advanced regular expression matching for your paths
     nginx.ingress.kubernetes.io/use-regex: "true"
-    # Secret Sauce: Captures the secondary portion ($2) of the URL and forwards it cleanly
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+
 spec:
   ingressClassName: nginx
+
   rules:
   - http:
       paths:
-      # 1. Main Website Route (Frontend Panel)
+
+      # Frontend
       - path: /()(.*)
         pathType: ImplementationSpecific
         backend:
           service:
-            name: frontend-service  # Changed to match your new frontend service layout
+            name: frontend-service
             port:
               number: 80
 
-      # 2. Documentation Route
+      # Documentation
       - path: /docs(/|$)(.*)
         pathType: ImplementationSpecific
         backend:
@@ -31,7 +34,7 @@ spec:
             port:
               number: 80
 
-      # 3. New Logic Tier Route (Backend Flask API)
+      # Backend API
       - path: /api(/|$)(.*)
         pathType: ImplementationSpecific
         backend:
