@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: jenkins
-      version: "*"
+      version: "5.8.60"
       sourceRef:
         kind: HelmRepository
         name: jenkins
@@ -25,10 +25,10 @@ spec:
         password: Admin123!
 
       serviceType: NodePort
-
       servicePort: 8080
-
       nodePort: 32000
+
+      javaOpts: "-Xms512m -Xmx1024m"
 
       installPlugins:
         - kubernetes
@@ -40,28 +40,14 @@ spec:
       resources:
         requests:
           cpu: "250m"
-          memory: "512Mi"
+          memory: "1Gi"
         limits:
           cpu: "1000m"
-          memory: "1Gi"
+          memory: "2Gi"
 
       persistence:
         enabled: true
         size: 10Gi
-
-      containerEnv:
-        - name: DOCKER_HOST
-          value: unix:///var/run/docker.sock
-
-      volumes:
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
-            type: Socket
-
-      volumeMounts:
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
 
     agent:
       enabled: true
