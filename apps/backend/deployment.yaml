@@ -97,7 +97,7 @@ spec:
         env:
 
         - name: DB_HOST
-          value: "YOUR-RDS-ENDPOINT"
+          value: "terraform-20260701051255786800000003.c1ou86wc0d3s.ap-south-1.rds.amazonaws.com"
 
         - name: DB_NAME
           value: "complaints_db"
