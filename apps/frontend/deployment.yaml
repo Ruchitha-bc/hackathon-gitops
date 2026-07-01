@@ -21,7 +21,7 @@ spec:
       containers:
 
       - name: nginx
-        image: diyacmenezes202/frontend:14
+        image: diyacmenezes202/frontend:15
 
         ports:
         - containerPort: 80
