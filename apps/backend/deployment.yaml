@@ -8,63 +8,112 @@ spec:
   selector:
     matchLabels:
       app: backend
+
   template:
     metadata:
       labels:
         app: backend
+
     spec:
       containers:
-      - name: backend-api
+      - name: backend
+
         image: python:3.9-slim
-        command: ["/bin/sh", "-c"]
+
+        command:
+        - /bin/sh
+        - -c
+
         args:
-          - |
-            pip install flask flask-cors psycopg2-binary
-            python -c "
-            from flask import Flask, request, jsonify
-            from flask_cors import CORS
-            import os, psycopg2
+        - |
+          pip install flask flask-cors psycopg2-binary
 
-            app = Flask(__name__)
-            CORS(app)
+          python - <<'EOF'
+          from flask import Flask,request,jsonify
+          from flask_cors import CORS
+          import os,psycopg2
 
-            DB_HOST = os.getenv('DB_HOST')
-            DB_NAME = os.getenv('DB_NAME')
-            DB_USER = os.getenv('DB_USER')
-            DB_PASSWORD = os.getenv('DB_PASSWORD')
+          app=Flask(__name__)
+          CORS(app)
 
-            def init_db():
-                conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
-                cur = conn.cursor()
-                cur.execute('CREATE TABLE IF NOT EXISTS complaints (id SERIAL PRIMARY KEY, title VARCHAR(100), description TEXT);')
-                conn.commit()
-                cur.close()
-                conn.close()
+          DB_HOST=os.getenv("DB_HOST")
+          DB_NAME=os.getenv("DB_NAME")
+          DB_USER=os.getenv("DB_USER")
+          DB_PASSWORD=os.getenv("DB_PASSWORD")
 
-            @app.route('/complaints', methods=['POST'])
-            def add_complaint():
-                data = request.get_json()
-                conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
-                cur = conn.cursor()
-                cur.execute('INSERT INTO complaints (title, description) VALUES (%s, %s) RETURNING id;', (data['title'], data['description']))
-                ticket_id = cur.fetchone()[0]
-                conn.commit()
-                cur.close()
-                conn.close()
-                return jsonify({'status': 'Created', 'id': ticket_id}), 201
+          def conn():
+              return psycopg2.connect(
+                  host=DB_HOST,
+                  database=DB_NAME,
+                  user=DB_USER,
+                  password=DB_PASSWORD
+              )
 
-            if __name__ == '__main__':
-                init_db()
-                app.run(host='0.0.0.0', port=5000)
-            "
+          db=conn()
+          cur=db.cursor()
+          cur.execute("""
+          CREATE TABLE IF NOT EXISTS complaints(
+              id SERIAL PRIMARY KEY,
+              title VARCHAR(100),
+              description TEXT
+          );
+          """)
+          db.commit()
+          cur.close()
+          db.close()
+
+          @app.route("/health")
+          def health():
+              return "OK"
+
+          @app.route("/complaints",methods=["POST"])
+          def complaints():
+
+              data=request.get_json()
+
+              db=conn()
+              cur=db.cursor()
+
+              cur.execute(
+              "INSERT INTO complaints(title,description) VALUES(%s,%s) RETURNING id;",
+              (data["title"],data["description"])
+              )
+
+              ticket=cur.fetchone()[0]
+
+              db.commit()
+
+              cur.close()
+              db.close()
+
+              return jsonify({"ticket":ticket})
+
+          app.run(host="0.0.0.0",port=5000)
+          EOF
+
         ports:
         - containerPort: 5000
+
         env:
+
         - name: DB_HOST
-          value: "terraform-20260630115825756700000003.c1ou86wc0d3s.ap-south-1.rds.amazonaws.com"
+          value: "YOUR-RDS-ENDPOINT"
+
         - name: DB_NAME
           value: "complaints_db"
+
         - name: DB_USER
           value: "postgres"
+
         - name: DB_PASSWORD
           value: "securepassword123"
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
