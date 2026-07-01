@@ -14,6 +14,23 @@ pipeline {
             }
         }
 
+        // ADD THIS STAGE
+        stage('Skip Jenkins Commit') {
+            steps {
+                script {
+                    def author = sh(
+                        script: 'git log -1 --pretty=%an',
+                        returnStdout: true
+                    ).trim()
+
+                    if (author == "Jenkins") {
+                        currentBuild.result = 'SUCCESS'
+                        error("Skipping build because this commit was created by Jenkins.")
+                    }
+                }
+            }
+        }
+
         stage('Build Frontend') {
             steps {
                 sh 'docker build -t $FRONTEND_IMAGE:${BUILD_NUMBER} ./apps/frontend'
@@ -75,6 +92,5 @@ pipeline {
                 }
             }
         }
-
     }
 }
