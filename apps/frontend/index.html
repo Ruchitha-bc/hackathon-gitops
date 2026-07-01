@@ -102,7 +102,7 @@ body:JSON.stringify(payload)
 const data=await response.json();
 
 document.getElementById("msg").innerHTML=
-"Complaint Submitted Successfully!";
+"Complaint Submitted Successfully! Ticket ID :" ${data.id};
 
 document.getElementById("complaintForm").reset();
 
