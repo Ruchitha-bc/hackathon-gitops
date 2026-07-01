@@ -3,10 +3,8 @@ kind: HelmRelease
 metadata:
   name: jenkins
   namespace: jenkins
-
 spec:
   interval: 10m
-
   chart:
     spec:
       chart: jenkins
@@ -19,8 +17,8 @@ spec:
   values:
     controller:
       image:
-        repository: jenkins/jenkins
-        tag: "2.555.3-jdk21"
+        repository: diyacmenezes202/jenkins
+        tag: latest
 
       serviceType: NodePort
       nodePort: 32000
@@ -33,12 +31,23 @@ spec:
         - git
         - workflow-aggregator
         - docker-workflow
+        - docker-plugin
         - docker-commons
         - credentials-binding
 
       persistence:
         enabled: true
         size: 10Gi
+
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
 
     agent:
       enabled: false
