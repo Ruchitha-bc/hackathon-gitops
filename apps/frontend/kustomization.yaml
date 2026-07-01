@@ -5,10 +5,7 @@ configMapGenerator:
 - name: frontend-html
   files:
     - index.html
-
-generatorOptions:
-  disableNameSuffixHash: true
-
+    
 resources:
 - deployment.yaml
 - service.yaml
