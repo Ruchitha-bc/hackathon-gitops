@@ -1,1 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automated Complaint Management System</title>
 
+    <style>
+        body{
+            font-family:Arial,sans-serif;
+            background:#f4f4f4;
+            padding:40px;
+        }
+
+        .container{
+            max-width:500px;
+            margin:auto;
+            background:white;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,.2);
+        }
+
+        input,textarea{
+            width:100%;
+            padding:10px;
+            margin:10px 0;
+        }
+
+        button{
+            background:#0078d4;
+            color:white;
+            border:none;
+            padding:12px;
+            width:100%;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        #msg{
+            margin-top:20px;
+            font-weight:bold;
+            color:green;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Complaint Management System</h2>
+
+<form id="complaintForm">
+
+<input
+type="text"
+id="title"
+placeholder="Complaint Title"
+required>
+
+<textarea
+id="description"
+placeholder="Describe your issue"
+required></textarea>
+
+<button type="submit">
+Submit Complaint
+</button>
+
+</form>
+
+<p id="msg"></p>
+
+</div>
+
+<script>
+
+document.getElementById("complaintForm").addEventListener("submit",async(e)=>{
+
+e.preventDefault();
+
+const payload={
+title:document.getElementById("title").value,
+description:document.getElementById("description").value
+};
+
+try{
+
+const response=await fetch("/api/complaints",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(payload)
+
+});
+
+const data=await response.json();
+
+document.getElementById("msg").innerHTML=
+"Complaint Submitted Successfully! Ticket ID : "+data.ticket;
+
+document.getElementById("complaintForm").reset();
+
+}catch{
+
+document.getElementById("msg").innerHTML=
+"Unable to connect to backend.";
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
