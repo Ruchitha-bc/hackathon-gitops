@@ -19,9 +19,8 @@ spec:
   values:
     controller:
       image:
-        registry: docker.io
-        repository: diyacmenezes202/jenkins
-        tag: latest
+        repository: jenkins/jenkins
+        tag: "2.555.3-jdk21"
 
       serviceType: NodePort
       nodePort: 32000
@@ -34,24 +33,12 @@ spec:
         - git
         - workflow-aggregator
         - docker-workflow
+        - docker-commons
+        - credentials-binding
 
       persistence:
         enabled: true
         size: 10Gi
-
-      containerEnv:
-        - name: DOCKER_HOST
-          value: unix:///var/run/docker.sock
-
-      volumes:
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
-            type: Socket
-
-      volumeMounts:
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
 
     agent:
       enabled: false
