@@ -17,13 +17,18 @@ spec:
         namespace: flux-system
 
   values:
+
     controller:
-      serviceType: NodePort
-      nodePort: 32000
 
       admin:
         username: admin
         password: Admin123!
+
+      serviceType: NodePort
+
+      servicePort: 8080
+
+      nodePort: 32000
 
       installPlugins:
         - kubernetes
@@ -34,11 +39,11 @@ spec:
 
       resources:
         requests:
-          cpu: 100m
-          memory: 256Mi
+          cpu: "250m"
+          memory: "512Mi"
         limits:
-          cpu: 500m
-          memory: 512Mi
+          cpu: "1000m"
+          memory: "1Gi"
 
       persistence:
         enabled: true
@@ -60,3 +65,11 @@ spec:
 
     agent:
       enabled: true
+
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
