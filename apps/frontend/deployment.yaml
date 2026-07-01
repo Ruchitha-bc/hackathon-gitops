@@ -21,7 +21,7 @@ spec:
       containers:
 
       - name: nginx
-        image: <dockerhub-username>/frontend:latest
+        image: diyacmenezes202/frontend:latest
 
         ports:
         - containerPort: 80
