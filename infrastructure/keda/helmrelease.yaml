@@ -3,10 +3,8 @@ kind: HelmRelease
 metadata:
   name: keda
   namespace: keda
-
 spec:
   interval: 10m
-
   chart:
     spec:
       chart: keda
@@ -15,6 +13,9 @@ spec:
         kind: HelmRepository
         name: kedacore
         namespace: flux-system
-
   install:
     createNamespace: true
+  values:                      # <-- CRITICAL ADDITION FOR CPU SCALING
+    logging:
+      operator:
+        level: info
